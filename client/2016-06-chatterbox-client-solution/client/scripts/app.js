@@ -3,7 +3,7 @@ var app = {
 
   //TODO: The current 'toggleFriend' function just toggles the class 'friend'
   //to all messages sent by the user
-  server: 'http://127.0.0.1:3000/classes/messages/',
+  server: 'http://127.0.0.1:3000/classes/messages',
   username: 'anonymous',
   roomname: 'lobby',
   lastMessageId: 0,
@@ -48,7 +48,7 @@ var app = {
         app.fetch();
       },
       error: function (data) {
-        console.error('chatterbox: Failed to send message', data);
+        console.error('chatterbox: Failed to send message', data.errora);
       }
     });
   },
@@ -58,12 +58,14 @@ var app = {
       url: app.server,
       type: 'GET',
       contentType: 'application/json',
-      data: { order: '-createdAt'},
+      // data: { order: '-createdAt'},
       success: function(data) {
         // Don't bother if we have nothing to work with
-        if (!data.results || !data.results.length) { return; }
-
-        // Get the last message
+        console.log('data:', data);
+        console.log(typeof data);
+        if (!data.results || !data.results.length) { app.stopSpinner(); return; }
+        console.log('foundData');
+        // Get the last messages
         var mostRecentMessage = data.results[data.results.length - 1];
         var displayedRoom = $('.chat span').first().data('roomname');
         app.stopSpinner();
@@ -80,7 +82,7 @@ var app = {
         }
       },
       error: function(data) {
-        console.error('chatterbox: Failed to fetch messages');
+        console.error('chatterbox: Failed to fetch messages', data);
       }
     });
   },
