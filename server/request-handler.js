@@ -13,7 +13,10 @@ this file and include it in basic-server.js so that it actually works.
 **************************************************************/
 var url = require("url");
 var path = require("path");
-var _storage = {"/classes/messages" : {"results": []}};
+var _storage = {
+  "/classes/messages" : {"results": []},
+  "/classes/room" : {"results": []}
+};
 
 
 var requestHandler = function(request, response) {
@@ -58,20 +61,21 @@ var requestHandler = function(request, response) {
   // up in the browser.
   //
     //GET
-  if (request.method === 'GET' && request.url === '/classes/messages') {
+  if (request.method === 'GET' && (request.url === '/classes/messages' || request.url === '/classes/room')) {
     //somehow get a json object to response
     statusCode = 200;
+    response.writeHead(statusCode, headers);
     response.end(JSON.stringify(_storage[request.url]));
   } else if (request.method === 'POST') {
     statusCode = 201;
     response.writeHead(statusCode, headers);
     var body = [];
+    //console.log('POST Request: ', request);
     request.on('data', function(chunk) {
       body.push(chunk);
     }).on('end', function() {
       body = Buffer.concat(body).toString();
-      console.log('body: ' + body);
-      _storage[request.url].results.push(body);
+      _storage[request.url].results.push(JSON.parse(body));
       response.end(body);
     });
   } else if (request.method === 'OPTIONS') {

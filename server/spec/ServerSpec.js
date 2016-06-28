@@ -65,7 +65,6 @@ describe('Node Server Request Listener Function', function() {
     var res = new stubs.response();
 
     handler.requestHandler(req, res);
-
     // Expect 201 Created response status
     expect(res._responseCode).to.equal(201);
 
