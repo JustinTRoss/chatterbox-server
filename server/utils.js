@@ -1,5 +1,5 @@
 
-var headers = {
+exports.headers = {
   'Content-Type': 'application/json',
   'access-control-allow-origin': '*',
   'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
@@ -9,7 +9,7 @@ var headers = {
  
 exports.sendResponse = function(response, data, statusCode) {
   statusCode = statusCode || 200;
-  response.writeHead(statusCode, headers);
+  console.log(exports.headers);
+  response.writeHead(statusCode, exports.headers);
   response.end(data);
-
 };
